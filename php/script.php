@@ -1,8 +1,7 @@
 <div>
 	<form name="frm" id="frm">
 				<?php
-					$conn = oci_pconnect('fac', 'r2017', 
-					'(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = dbcldev-scan.orange.com.do)(PORT = 1521)))(CONNECT_DATA=(SERVICE_NAME=TAFMGDEV.orange.com.do)))');
+					$conn = oci_pconnect();
 					if (!$conn) {
 						$e = oci_error();
 						trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
