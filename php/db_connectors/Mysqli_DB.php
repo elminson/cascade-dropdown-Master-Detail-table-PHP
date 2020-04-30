@@ -1,5 +1,6 @@
 <?php
 
+include('DB.php');
 
 class Mysqli_DB implements DB
 {
@@ -14,16 +15,18 @@ class Mysqli_DB implements DB
     private $stid;
 
     /**
-     * Oci constructor.
+     * Mysqli constructor.
      *
-     * @param $username
-     * @param $password
-     * @param $connectionString
+     * @param     $host
+     * @param     $username
+     * @param     $password
+     * @param     $database
+     * @param int $port
      */
-    public function __construct($username, $password, $connectionString)
+    public function __construct($host, $username, $password, $database)
     {
 
-        $this->conn = mysqli_connect($username, $password, $connectionString);
+        $this->conn = mysqli_connect($host, $username, $password, $database);
         if (!$this->conn) {
             print_r(mysqli_error($this->conn));
             die();
@@ -35,7 +38,8 @@ class Mysqli_DB implements DB
      */
     public function query($sql)
     {
-        $this->stid  = $this->conn->query($sql);
+
+        $this->stid = $this->conn->query($sql);
 
     }
 
@@ -46,10 +50,24 @@ class Mysqli_DB implements DB
     {
 
         $data = [];
-        while ($row = $this->stid->fetch_row()) {
-            $data[] = $row;
+
+        try {
+
+            if (!empty($this->stid)) {
+
+                while ($row = $this->stid->fetch_array(MYSQLI_ASSOC)) {
+                    $data[] = $row;
+                }
+
+                $this->stid->free_result();
+                $this->conn->close();
+
+            }
+
+        } catch (Exception $e) {
+            print_r($e->getMessage());
         }
-        $this->stid->free_result();
+
         return $data;
 
     }
