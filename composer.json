@@ -1,0 +1,5 @@
+{
+    "require": {
+        "taq/pdooci": "^1.0"
+    }
+}
